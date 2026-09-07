@@ -1,0 +1,8 @@
+
+@import url('https://fonts.googleapis.com/css2?family=Press+Start+2P&display=swap');
+
+*:not(i):not(.fa) {
+font-family: "Press Start 2P", system-ui !important;
+font-weight: 400 !important;
+font-style: normal !important;
+}

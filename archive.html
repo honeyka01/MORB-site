@@ -1,0 +1,607 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Sarktis Archive</title>
+  <link rel="stylesheet" href="./index.css">
+  <link rel="stylesheet" href="./font-override.css">
+</head>
+
+<body>
+  <div class="crt-geometry"></div>
+  <div class="crt-scanline"></div>
+  <div class="crt-flicker"></div>
+<div class="terminal-topline">
+  VAULT-07 // ARCHIVE // SYSTEM ONLINE
+</div>
+
+  <!-- Измененная шапка сайта -->
+<header class="header">
+  <div class="logo">
+    <span>[МОРБ]</span>
+  </div>
+  <nav>
+    <a href="#archive">Главная</a>
+    <a href="#about">Подробнее</a>
+  </nav>
+  <!-- Вместо кнопки "Новая запись" теперь кнопка профиля/входа -->
+  <div id="auth-zone">
+    <button class="button" id="loginButton">Войти в терминал</button>
+  </div>
+</header>
+
+<!-- Модальное окно авторизации -->
+<!-- Модальное окно входа с авторизацией по ЛОГИНУ (Проверьте этот блок в HTML) -->
+<div class="modal hidden" id="authModal">
+  <div class="modal-content">
+    <button class="close" id="closeAuthBtn">×</button>
+    <p class="green-text">SECURITY LOGIN</p>
+    <h2>Авторизация доступа</h2>
+    <form id="loginForm">
+      <label>
+        Имя пользователя (Логин) *
+        <input type="text" id="loginUsername" required placeholder="Например: operator_01">
+      </label>
+      <label>
+        Пароль доступа *
+        <input type="password" id="loginPassword" required placeholder="••••••••">
+      </label>
+      <div class="form-buttons">
+        <button type="submit" class="button">Запросить доступ</button>
+      </div>
+    </form>
+  </div>
+</div>
+
+<!-- Блок личного кабинета (заметки пользователя), который показывается только при авторизации -->
+
+    <main>
+    <div class="terminal-main-layout">
+      
+      <!-- ЛЕВАЯ КОЛОНКА: ЛИЧНЫЙ КАБИНЕТ (Показывается только после входа) -->
+      <aside id="userDashboard" class="hidden" style="flex: 1; min-width: 280px; display: flex; flex-direction: column; gap: 20px; padding: 20px; border: 1px solid var(--green); background: rgba(0, 20, 9, 0.85); box-shadow: inset 0 0 20px rgba(57, 255, 106, 0.15); overflow-y: auto;">
+        <p class="green-text" style="font-size: 11px; margin: 0; letter-spacing: 1px;">OPERATOR TERMINAL // ОНЛАЙН</p>
+        
+        <!-- Блок Аватара и Профиля -->
+        <div class="profile-block" style="display: flex; flex-direction: column; align-items: center; gap: 12px; padding-bottom: 15px; border-bottom: 1px solid rgba(57, 255, 106, 0.3);">
+          <!-- Круглый или квадратный аватар в стиле ретро-терминала -->
+          <div id="userAvatarContainer" style="width: 90px; height: 90px; border: 2px solid var(--green); background: rgba(0, 11, 5, 0.6); display: flex; align-items: center; justify-content: center; overflow: hidden; box-shadow: 0 0 10px var(--glow); cursor: pointer;" title="Нажмите, чтобы изменить аватар">
+            <span id="avatarPlaceholder" style="font-size: 32px; color: var(--green);">?</span>
+            <img id="userAvatarImg" src="" alt="Avatar" class="hidden" style="width: 100%; height: 100%; object-fit: cover;">
+          </div>
+          <h2 id="userWelcome" style="font-size: 16px; margin: 0; text-align: center; color: var(--green-bright); text-shadow: 0 0 8px var(--green);">Загрузка...</h2>
+          <button class="secondary" id="changeAvatarBtn" style="padding: 4px 8px; font-size: 11px; width: 100%;">[ Изменить аватар ]</button>
+        </div>
+
+        <!-- Раздел личных заметок -->
+        <!-- Раздел личных заметок -->
+<div style="display: flex; justify-content: space-between; align-items: center; margin-top: 15px; padding-bottom: 5px; border-bottom: 1px solid rgba(57, 255, 106, 0.2);">
+  <span class="green-text" style="font-size: 16px; letter-spacing: 1px;">ЗАМЕТКИ:</span>
+  <button class="button" id="addNoteButton" style="padding: 2px 8px; font-size: 12px; box-shadow: 0 0 5px rgba(57, 255, 106, 0.3);">+</button>
+</div>
+
+<!-- Стилизованный контейнер для списка заметок с фиксированной высотой и прокруткой -->
+<div id="userNotes" style="display: flex; flex-direction: column; gap: 12px; margin-top: 10px; max-height: 280px; overflow-y: auto; padding-right: 4px;">
+  <!-- Сюда JS будет рендерить компактный список заметок -->
+</div>
+
+      </aside>
+
+      <!-- ЦЕНТРАЛЬНЫЙ БОКС С ТРЕМЯ ПРЯМОУГОЛЬНИКАМИ (Ваш исходный код) -->
+      <section class="hero" id="home" style="flex: 3;">
+        <!-- Первый прямоугольник (Левый) -->
+        <div class="hero-column ticker-wrapper" style="padding-top: 30px; padding-bottom: 30px;">
+          <div class="ticker-content" style="animation-duration: 50s;">
+            <p class="description"><br><br><br><br><br><br><br><br><br><br><br><br>Каждый воин бравый знает
+Как врага сломить!
+Каждый из нас точно знает
+Как их истребить!
+Мы идем победным маршем!
+По своей земле!
+Мы идем победным маршем!
+На сервере СП!
+<br>
+<br>
+<br>
+<br>
+Помните что!
+Великий лидер ведет вас
+к настоящему, а главное 
+великому будущему 
+в котором очень скоро
+каждый из нас будет
+ведь мы боремся не за деньги
+а за идею!
+<br>
+<br>
+<br>
+<br>
+Слава [МОРБ]-у!
+<br>
+<br>
+<br>
+<br>
+Великий солдат [МОРБ]-а
+появился по нужде. 
+Судьба сервера в огне, 
+что пылает в юных душах: 
+в огне и готовности погибнуть 
+за Человечество
+
+</p>
+          </div>
+        </div>
+
+        <!-- Второй прямоугольник (Центральный) -->
+        <div class="hero-column ticker-wrapper" style="padding-top: 30px; padding-bottom: 30px;">
+          <div class="ticker-content">
+            <p class="description"><br><br><br><br><br><br><br><br><br><br><br><br>Каждый из нас был один и разъеденен.
+[МОРБ] дал вам шанс на жизнь, 
+жизнь в процветающем мире и его будущем, 
+где каждый из нас это механизм отлаженной работы,
+в котором каждый из нас важен.
+<br>
+<br>
+<br>
+<br>
+Каждый из вас был выбран для великой цели,
+для святой идеи, что несет великий воин [МОРБ]-а,
+и всегда помните товарищи!
+Не идя за другими: за вами не пойдут.
+Оберегайте обычных граждан СПм.
+Не давайте злу достичь заветной цели!
+<br>
+<br>
+<br>
+<br>
+Помните! не мы пришли на земли СПм
+Это паралюди пришли на СПм, и мы
+призваны для того что-бы доблестно
+защитить каждого обыкновенного гражданина
+что требует защиты и безопасности жизни в своем доме!
+<br>
+<br>
+<br>
+<br>
+Каждый из нас был один и разъеденен.
+[МОРБ] дал вам шанс на жизнь, 
+жизнь в процветающем мире и его будущем, 
+где каждый из нас это механизм отлаженной работы,
+в котором каждый из нас важен.
+<br>
+<br>
+<br>
+<br>
+Каждый из вас был выбран для великой цели,
+для святой идеи, что несет великий воин [МОРБ]-а,
+и всегда помните товарищи!
+Не идя за другими: за вами не пойдут.
+Оберегайте обычных граждан СПм.
+Не давайте злу достичь заветной цели!
+<br>
+<br>
+<br>
+<br>
+Помните! не мы пришли на земли СПм
+Это паралюди пришли на СПм, и мы
+призваны для того что-бы доблестно
+защитить каждого обыкновенного гражданина
+что требует защиты и безопасности жизни в своем доме!
+</p>
+          </div>
+        </div>
+        
+        <!-- Третий прямоугольник (Правый) -->
+        <div class="hero-column" style="justify-content: center; align-items: center;">
+          <div class="symbol">[SOON]</div>
+        </div>
+      </section>
+
+      <!-- ПАНЕЛЬ РАЗДЕЛОВ (СПРАВА) -->
+      <aside class="sidebar-nav" style="flex: 1;">
+        <a href="personal.html" class="nav-section-card"><span>РАЗДЕЛ №1 / ПЕРСОНАЛ</span><small>ПЕРЕЙТИ →</small></a>
+        <a href="para.html" class="nav-section-card"><span>РАЗДЕЛ №2 / ПАРАЛЮДИ</span><small>ПЕРЕЙТИ →</small></a>
+        <a href="anomaly.html" class="nav-section-card"><span>РАЗДЕЛ №3 / АНОМАЛИИ</span><small>ПЕРЕЙТИ →</small></a>
+        <a href="prot.html" class="nav-section-card"><span>РАЗДЕЛ №4 / ПРОТОКОЛ</span><small>ПЕРЕЙТИ →</small></a>
+      </aside>
+
+    </div>
+  </main>
+
+  <div class="modal hidden" id="formModal">
+    <div class="modal-content">
+      <button class="close" data-close="formModal">×</button>
+
+      <p class="green-text">ARCHIVE ENTRY</p>
+      <h2 id="formTitle">Новая запись</h2>
+
+      <form id="form">
+        <input type="hidden" id="id">
+
+        <label>
+          Название существа *
+          <input type="text" id="name" required>
+        </label>
+
+        <label>
+          Категория *
+          <input type="text" id="category" required>
+        </label>
+
+        <div class="two-columns">
+                    <label>
+            Статус
+            <select id="status">
+              <option>Активен</option>
+              <option>Изолирован</option>
+              <option>Уничтожен</option>
+            </select>
+          </label>
+
+          <label>
+            Уровень опасности
+            <select id="danger">
+              <option value="1">I</option>
+              <option value="2">II</option>
+              <option value="3" selected>III</option>
+              <option value="4">IV</option>
+              <option value="5">V</option>
+            </select>
+          </label>
+        </div>
+
+        <label>
+          Уровень доступа
+          <select id="access">
+            <option>I</option>
+            <option>II</option>
+            <option selected>III</option>
+            <option>IV</option>
+            <option>V</option>
+            <option>OMEGA</option>
+          </select>
+        </label>
+
+        <label>
+          Ссылка на изображение
+          <input type="url" id="image" placeholder="https://...">
+        </label>
+
+        <label>
+          Краткое описание *
+          <textarea id="shortDescription" rows="3" required></textarea>
+        </label>
+
+        <label>
+          Полное описание
+          <textarea id="fullDescription" rows="6"></textarea>
+        </label>
+
+        <label>
+          Дескрипторы
+          <input id="descriptors" placeholder="Плоть, Ночной, Агрессивный">
+          <small>Вводи дескрипторы через запятую.</small>
+        </label>
+
+        <div class="form-buttons">
+          <button type="button" class="secondary" data-close="formModal">
+            Отмена
+          </button>
+
+          <button type="submit" class="button">
+            Сохранить
+          </button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <div class="modal hidden" id="detailsModal">
+    <div class="modal-content" id="details">
+      <button class="close" data-close="detailsModal">×</button>
+    </div>
+  </div>
+  
+  
+  <audio id="hover-sound" src="./sounds/click.wav" preload="auto"></audio>
+<script>
+  // Находим аудиоэлемент и все карточки
+  const sound = document.getElementById('hover-sound');
+  sound.volume = 0.05; 
+  const cards = document.querySelectorAll('.nav-section-card');
+
+  cards.forEach(card => {
+    card.addEventListener('mouseenter', () => {
+      sound.currentTime = 0; // Сбрасываем дорожку на начало, чтобы звук воспроизводился без задержек при быстром наведении
+      sound.play().catch(error => {
+        // Браузеры блокируют автозвук до первого клика пользователя по странице
+        console.log("Звук заблокирован браузером. Нужен клик по странице:", error);
+      });
+    });
+  });
+  // ===============================
+// БЕСКОНЕЧНЫЙ ЦИКЛ ПЕЧАТИ ТЕКСТА
+// ===============================
+function startTypewriterLoop(elementId, speed = 50, delayBetweenCycles = 3000) {
+  const element = document.getElementById(elementId);
+  if (!element) return;
+
+  // Сохраняем исходный текст и очищаем элемент
+  const fullText = element.textContent.trim().replace(/\s+/g, ' ');
+  element.textContent = "";
+
+  let index = 0;
+
+  function type() {
+    if (index < fullText.length) {
+      element.textContent += fullText.charAt(index);
+      index++;
+      setTimeout(type, speed); // Скорость печати каждого символа
+    } else {
+      // Когда текст полностью напечатан, ждем delayBetweenCycles и запускаем круг заново
+      setTimeout(() => {
+        element.textContent = "";
+        index = 0;
+        type();
+      }, delayBetweenCycles);
+    }
+  }
+
+  // Запуск процесса
+  type();
+}
+
+// Запускаем автоматическое чтение-печать после полной загрузки страницы
+document.addEventListener("DOMContentLoaded", () => {
+  // Скорость 40мс на символ для заголовка, 3 секунды пауза перед повтором
+  startTypewriterLoop("typewriter-title", 60, 4000);
+  
+  // Скорость 25мс на символ для описания, 5 секунд пауза перед повтором
+  startTypewriterLoop("typewriter-desc", 25, 5000);
+});
+// ========================================================
+// ПЛАВНОЕ ЗАМЕДЛЕНИЕ БЕГУЩЕЙ СТРОКИ БЕЗ ПРЫЖКОВ ТЕКСТА
+// ========================================================
+document.addEventListener("DOMContentLoaded", () => {
+  const wrappers = document.querySelectorAll('.ticker-wrapper');
+
+  wrappers.forEach(wrapper => {
+    const content = wrapper.querySelector('.ticker-content');
+    if (!content) return;
+
+    // Получаем доступ к веб-анимации элемента
+    const animations = content.getAnimations();
+    
+    wrapper.addEventListener('mouseenter', () => {
+      content.getAnimations().forEach(anim => {
+        // Плавно замедляем скорость воспроизведения до 0.2 (в 5 раз медленнее)
+        // Текст продолжит ползти строго с того же пикселя, где был
+        anim.playbackRate = 0.2; 
+      });
+    });
+
+    wrapper.addEventListener('mouseleave', () => {
+      content.getAnimations().forEach(anim => {
+        // Возвращаем стандартную скорость 1
+        anim.playbackRate = 1;
+      });
+    });
+  });
+});
+// Находим элементы окна авторизации
+  const targetModal = document.getElementById('authModal');
+  const targetCloseBtn = document.getElementById('closeAuthBtn');
+
+  // Закрытие при клике на крестик
+  if (targetCloseBtn && targetModal) {
+    targetCloseBtn.addEventListener('click', () => {
+      targetModal.classList.add('hidden');
+      targetModal.style.setProperty('display', 'none', 'important'); // Гарантированно скрываем окно
+    });
+  }
+
+  // Закрытие при нажатии на клавишу Esc
+  window.addEventListener('keydown', (e) => {
+  if (e.key === 'Escape' && targetModal && !targetModal.classList.contains('hidden')) {
+    targetModal.classList.add('hidden');
+    targetModal.style.setProperty('display', 'none', 'important'); // Гарантированно скрываем окно
+  }
+});
+// Закрытие окна ошибки при клике на кнопку «Закрыть»
+// Настройка громкости и закрытия для окна ошибки
+const errModal = document.getElementById('errorModal');
+const errBtn = document.getElementById('closeErrorBtn');
+const errSound = document.getElementById('error-sound');
+
+if (errSound) {
+  errSound.volume = 0.1; // Делает звук тихим (10% от максимума)
+}
+
+if (errBtn && errModal) {
+  errBtn.onclick = () => {
+    errModal.classList.add('hidden');
+    errModal.style.setProperty('display', 'none', 'important');
+  };
+}
+// Жесткий перехват клика на кнопку "+" для заметок в обход всех файлов
+const plusBtn = document.getElementById('addNoteButton');
+if (plusBtn) {
+  plusBtn.addEventListener('click', (e) => {
+    e.preventDefault();
+    e.stopImmediatePropagation(); // Глушит старый код с prompt()
+    
+    document.getElementById('noteTitleInput').value = "";
+    document.getElementById('noteContentInput').value = "";
+    document.getElementById('noteModal').classList.remove('hidden');
+  }, true); // Приоритетный запуск
+}
+
+// Жесткий перехват клика на кнопку "Изменить аватар"
+const avatarBtn = document.getElementById('changeAvatarBtn') || document.getElementById('userAvatarContainer');
+if (avatarBtn) {
+  avatarBtn.addEventListener('click', (e) => {
+    e.preventDefault();
+    e.stopImmediatePropagation(); // Глушит старый код с prompt()
+    
+    const currentUrl = document.getElementById('userAvatarImg')?.src || "";
+    document.getElementById('avatarInput').value = currentUrl.includes(window.location.origin) ? "" : currentUrl;
+    document.getElementById('avatarModal').classList.remove('hidden');
+  }, true); // Приоритетный запуск
+}
+// Обернули весь код в ожидание загрузки всех скриптов базы данных
+document.addEventListener('DOMContentLoaded', () => {
+
+  // Код для кнопки "Записать" в окне заметки
+  const saveNoteBtn = document.getElementById('saveNoteBtn');
+  if (saveNoteBtn) {
+    saveNoteBtn.onclick = async (e) => {
+      e.preventDefault();
+      const title = document.getElementById('noteTitleInput').value.trim();
+      const content = document.getElementById('noteContentInput').value.trim();
+      if (!title) return;
+
+      document.getElementById('noteModal').classList.add('hidden');
+      
+      // Теперь supabaseClient гарантированно существует
+      const { data: { user } } = await supabaseClient.auth.getUser();
+      const { error } = await supabaseClient.from('user_notes').insert([{ title, content, user_id: user.id }]);
+      
+      if (error) {
+        document.getElementById('errorModal')?.classList.remove('hidden');
+      } else if (typeof loadUserNotes === 'function') {
+        const sendSound = document.getElementById('send-sound');
+      if (sendSound) {
+        sendSound.volume = 0.05; // Громкость звука (можно сделать тише, например 0.05)
+        sendSound.currentTime = 0;
+        sendSound.play().catch(e => console.log(e));
+      }
+      // КОНЕЦ ВСТАВКИ
+        loadUserNotes(); // Перерисовываем список заметок на экране
+      }
+    };
+    // Собираем все добавленные звуки клавиш в массив
+  const hackSounds = document.querySelectorAll('.hack-sound');
+  
+  // Функция воспроизведения случайного звука
+  function playRandomKeySound() {
+    if (hackSounds.length === 0) return;
+    
+    // Выбираем случайный звук от 0 до 5
+    const randomIndex = Math.floor(Math.random() * hackSounds.length);
+    const audio = hackSounds[randomIndex];
+    
+    audio.volume = 0.02; // Комфортная тихая громкость для клавиш
+    audio.currentTime = 0; // Сбрасываем в начало, чтобы звук не заикался при быстрой печати
+    audio.play().catch(e => console.log("Печать заблокирована:", e));
+  }
+
+  // Вешаем звук на поля ввода заголовка и текста в окне заметки
+  const noteTitle = document.getElementById('noteTitleInput');
+  const noteContent = document.getElementById('noteContentInput');
+
+  if (noteTitle) noteTitle.addEventListener('input', playRandomKeySound);
+  if (noteContent) noteContent.addEventListener('input', playRandomKeySound);
+}
+
+  // Код для кнопки "Сохранить" в окне аватара
+  const saveAvatarBtn = document.getElementById('saveAvatarBtn');
+  if (saveAvatarBtn) {
+    saveAvatarBtn.onclick = async (e) => {
+      e.preventDefault();
+      const newAvatarUrl = document.getElementById('avatarInput').value.trim();
+      document.getElementById('avatarModal').classList.add('hidden');
+      
+      const { data, error } = await supabaseClient.auth.updateUser({
+        data: { avatar_url: newAvatarUrl }
+      });
+      
+      if (error) {
+        document.getElementById('errorModal')?.classList.remove('hidden');
+      } else if (typeof updateAvatarUI === 'function') {
+        updateAvatarUI(data.user); // Обновляем картинку на экране
+      }
+    };
+  }
+
+}); // Закрывающий хвост проверки
+
+
+
+
+</script>
+<!-- Аудио для воспроизведения звука ошибки -->
+<audio id="error-sound" src="./sounds/error.wav" preload="auto"></audio>
+
+<!-- Зеленое окно ошибки в стиле твоего терминала -->
+<div class="modal hidden" id="errorModal">
+  <div class="modal-content" style="max-width: 400px; text-align: center;">
+    <p style="color: #ff3939; font-size: 11px; letter-spacing: 2px; margin: 0;">CRITICAL ERROR // ОТКАЗ В ДОСТУПЕ</p>
+    <h2 style="color: var(--green-bright); margin: 15px 0;">Ошибка авторизации</h2>
+    <p style="color: var(--text); font-size: 14px; margin-bottom: 25px;">Неверное имя пользователя или пароль доступа.</p>
+    <button class="button" id="closeErrorBtn" type="button" onclick="event.preventDefault(); const modal = document.getElementById('errorModal'); modal.classList.add('hidden'); modal.style.display = '';" style="width: 100%;">[ Закрыть ]</button>
+
+
+  </div>
+</div>
+<!-- Окно для изменения Аватара -->
+<div class="modal hidden" id="avatarModal">
+  <div class="modal-content" style="max-width: 450px; text-align: center;">
+    <p style="color: var(--green); font-size: 11px; letter-spacing: 2px; margin: 0;">TERMINAL UTILITY // СМЕНА АВАТАРА</p>
+    <h2 style="color: var(--green-bright); margin: 15px 0;">Ссылка на изображение</h2>
+    <input type="text" id="avatarInput" placeholder="https://..." style="width: 100%; margin-bottom: 20px;">
+    <div class="form-buttons" style="border: none; padding: 0;">
+      <button type="button" class="secondary" onclick="document.getElementById('avatarModal').classList.add('hidden')" style="width: 50%;">Отмена</button>
+      <button type="button" class="button" id="saveAvatarBtn" style="width: 50%;">Сохранить</button>
+    </div>
+  </div>
+</div>
+
+<!-- Окно для создания Заметки -->
+<div class="modal hidden" id="noteModal">
+  <div class="modal-content" style="max-width: 500px;">
+    <p style="color: var(--green); font-size: 11px; letter-spacing: 2px; margin: 0; text-align: center;">ARCHIVE UTILITY // НОВАЯ ЗАПИСЬ</p>
+    <h2 style="color: var(--green-bright); margin: 15px 0; text-align: center;">Создание лога</h2>
+    <label>Заголовок лога:<input type="text" id="noteTitleInput" placeholder="Введите заголовок..."></label>
+    <label style="margin-top: 10px;">Текст заметки:<textarea id="noteContentInput" rows="4" placeholder="Введите текст..."></textarea></label>
+    <div class="form-buttons" style="border: none; padding-top: 15px;">
+      <button type="button" class="secondary" onclick="document.getElementById('noteModal').classList.add('hidden')" style="width: 50%;">Отмена</button>
+      <button type="button" class="button" id="saveNoteBtn" style="width: 50%;">Записать</button>
+    </div>
+  </div>
+</div>
+
+<!-- Окно подтверждения Удаления -->
+<div class="modal hidden" id="confirmDeleteModal">
+  <div class="modal-content" style="max-width: 400px; text-align: center;">
+    <p style="color: #ff3939; font-size: 11px; letter-spacing: 2px; margin: 0;">SYSTEM WARNING // УДАЛЕНИЕ ДАННЫХ</p>
+    <h2 style="color: var(--green-bright); margin: 15px 0;">Удалить лог?</h2>
+    <p style="color: var(--muted); font-size: 13px; margin-bottom: 20px;">Это действие сотрет запись из архива навсегда.</p>
+    <div class="form-buttons" style="border: none; padding: 0;">
+      <button type="button" class="secondary" onclick="document.getElementById('confirmDeleteModal').classList.add('hidden')" style="width: 50%;">Отмена</button>
+      <button type="button" class="button" id="confirmDeleteBtn" style="background: #ff3939; border-color: #ff6666; color: #fff; width: 50%;">Удалить</button>
+    </div>
+  </div>
+</div>
+<!-- Звуки клавиатуры -->
+<audio class="hack-sound" src="./sounds/hack1.wav" preload="auto"></audio>
+<audio class="hack-sound" src="./sounds/hack2.wav" preload="auto"></audio>
+<audio class="hack-sound" src="./sounds/hack3.wav" preload="auto"></audio>
+<audio class="hack-sound" src="./sounds/hack4.wav" preload="auto"></audio>
+<audio class="hack-sound" src="./sounds/hack5.wav" preload="auto"></audio>
+<audio class="hack-sound" src="./sounds/hack6.wav" preload="auto"></audio>
+
+<audio id="send-sound" src="./sounds/send.wav" preload="auto"></audio>
+
+
+
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+  <script src="./config.js"></script>
+<script src="./auth.js"></script>
+<script src="./main.js"></script>
+<script src="./personal.js"></script> 
+<script src="./para.js"></script> 
+<script src="./anomaly.js"></script> 
+<script src="./prot.js"></script> 
+</body>
+</html>

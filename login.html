@@ -1,0 +1,518 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>[МОРБ] // СЕКРЕТНЫЙ ДОСТУП</title>
+
+  <style>
+    :root {
+      --bg: #010502;
+      --panel: rgba(5, 14, 7, 0.92);
+      --line: rgba(57, 255, 106, 0.25);
+      --green: #39ff6a;
+      --green-soft: #78ff96;
+      --muted: #496951;
+      --red: #ff3939;
+      --text: #9abca1;
+    }
+
+    * { box-sizing: border-box; }
+
+    html, body {
+      width: 100%;
+      height: 100%;
+      margin: 0;
+      background-color: #000;
+      overflow: hidden;
+    }
+
+    /* === ГЛАВНЫЙ КОНТЕЙНЕР ЭКРАНА (Изогнутый аналоговый дисплей) === */
+    .screen-container {
+      width: 100%;
+      height: 100vh;
+      display: grid;
+      place-items: center;
+      position: relative;
+      background: 
+        /* Текстура горизонтальных полос старого ТВ */
+        linear-gradient(rgba(18, 16, 16, 0) 50%, rgba(0, 0, 0, 0.4) 50%), 
+        /* Направленные микро-линии */
+        linear-gradient(90deg, rgba(255, 0, 0, 0.03), rgba(0, 255, 0, 0.01), rgba(0, 0, 255, 0.03)),
+        /* Базовое зеленоватое свечение */
+        radial-gradient(circle at 50% 50%, #09220f 0%, #010502 100%);
+      background-size: 100% 4px, 6px 100%, 100% 100%;
+      
+      /* Плавная кинематографичная анимация включения всего экрана */
+      animation: turn-on 1.4s cubic-bezier(0.19, 1, 0.22, 1) both;
+    }
+
+    /* === ЭФФЕКТ РЫБЬЕГО ГЛАЗА / ВЫПУКЛОЙ ЛИНЗЫ === */
+    .screen-container::before {
+      content: " ";
+      display: block;
+      position: absolute;
+      inset: 0;
+      background: radial-gradient(circle at 50% 50%, transparent 35%, rgba(0, 0, 0, 0.45) 70%, rgba(0, 0, 0, 0.9) 100%);
+      z-index: 1001;
+      pointer-events: none;
+    }
+
+    /* Сферическое стекло монитора */
+    .crt-glass {
+      position: fixed;
+      inset: 0;
+      z-index: 1000;
+      pointer-events: none;
+      background: radial-gradient(circle at 50% 15%, rgba(255, 255, 255, 0.03) 0%, rgba(255, 255, 255, 0) 50%);
+      box-shadow: inset 0 0 180px rgba(0, 0, 0, 0.98);
+    }
+
+    /* === БЕЗШОВНАЯ БЕГУЩАЯ ПОЛОСА СКАНИРОВАНИЯ === */
+    .crt-laser-line {
+      position: absolute;
+      inset: 0;
+      pointer-events: none;
+      z-index: 999;
+      /* Исправлено: Полная прозрачность по краям градиента, чтобы не было видно швов */
+      background: linear-gradient(
+        to bottom,
+        rgba(57, 255, 106, 0) 0%,
+        rgba(57, 255, 106, 0.07) 45%,
+        rgba(255, 255, 255, 0.13) 50%,
+        rgba(57, 255, 106, 0.07) 55%,
+        rgba(57, 255, 106, 0) 100%
+      );
+      background-size: 100% 40vh;
+      background-repeat: no-repeat;
+      /* Анимация начинается далеко за пределами экрана (-50vh до 150vh) */
+      animation: scanline 7s linear infinite;
+    }
+
+    .crt-flicker {
+      position: absolute;
+      inset: 0;
+      pointer-events: none;
+      z-index: 997;
+      background: rgba(18, 16, 16, 0.1);
+      opacity: 0;
+      animation: flicker 0.25s infinite;
+    }
+
+    /* === АНИМАЦИИ === */
+    @keyframes turn-on {
+      0% { transform: scale(1, 0.002); filter: brightness(20) contrast(2); opacity: 0; }
+      25% { transform: scale(1, 0.005); filter: brightness(15) contrast(1.5); opacity: 1; }
+      50% { transform: scale(1, 0.73); filter: brightness(2.5) contrast(1.2); }
+      75% { transform: scale(1, 1.02); filter: brightness(1.2) contrast(1); }
+      100% { transform: scale(1, 1); filter: brightness(1) contrast(1); opacity: 1; }
+    }
+
+    @keyframes scanline {
+      0% { transform: translateY(-50vh); }
+      100% { transform: translateY(150vh); }
+    }
+
+    @keyframes flicker {
+      0% { opacity: 0.06; }
+      50% { opacity: 0.11; }
+      100% { opacity: 0.07; }
+    }
+
+    /* === ВИДОИЗМЕНЕННОЕ ОКНО ВХОДА (FALLOUT MILITARY STYLE) === */
+    body {
+      color: var(--text);
+      font-family: "Courier New", monospace;
+    }
+
+    .corner {
+      position: fixed;
+      top: 18px;
+      right: 18px;
+      color: var(--muted);
+      font-size: 11px;
+      border: 1px solid var(--line);
+      padding: 4px 12px;
+      letter-spacing: 1px;
+      background: rgba(0,0,0,0.4);
+      z-index: 10;
+    }
+
+    .access-card {
+      width: min(440px, calc(100vw - 30px));
+      min-height: 590px; 
+      padding: 35px 40px;
+      border: 2px solid var(--line);
+      background: var(--panel);
+      position: relative;
+      contain: layout paint;
+      z-index: 5;
+      box-shadow: 0 0 25px rgba(57,255,106,.02);
+    }
+
+    /* Аутентичные угловые рамки вокруг терминала */
+    .access-card::before, .access-card::after {
+      content: "";
+      position: absolute;
+      width: 20px;
+      height: 20px;
+      border: 3px solid var(--green);
+      pointer-events: none;
+    }
+    /* Топ-левый и бот-правый углы */
+    .access-card::before { top: -2px; left: -2px; border-right: none; border-bottom: none; }
+    .access-card::after { bottom: -2px; right: -2px; border-left: none; border-top: none; }
+
+    /* Декоративная техническая шапка */
+    .terminal-header {
+      display: flex;
+      justify-content: space-between;
+      font-size: 10px;
+      color: var(--muted);
+      margin-bottom: 20px;
+      border-bottom: 1px dashed var(--line);
+      padding-bottom: 6px;
+    }
+
+    .logo {
+      width: 64px;
+      height: 64px;
+      margin: 10px auto 20px;
+      border: 1px dashed var(--green);
+      display: grid;
+      place-items: center;
+      color: var(--green);
+      font-size: 38px;
+      text-shadow: 0 0 8px var(--green);
+    }
+
+    .classification {
+      margin-bottom: 15px;
+      color: var(--green-soft);
+      font-size: 11px;
+      letter-spacing: 2px;
+      font-weight: bold;
+    }
+
+    h1 {
+      margin: 0 0 5px 0;
+      color: var(--green);
+      font-size: 26px;
+      letter-spacing: 4px;
+      text-shadow: 0 0 10px rgba(57,255,106,.5);
+    }
+
+    .subtitle {
+      margin: 0 auto 30px;
+      color: var(--muted);
+      font-size: 11px;
+      line-height: 1.4;
+      text-transform: uppercase;
+    }
+
+    /* Поля ввода в стиле старых логов */
+    .field {
+      text-align: left;
+      margin-bottom: 22px;
+      position: relative;
+    }
+
+    label {
+      display: block;
+      margin-bottom: 5px;
+      color: var(--green);
+      font-size: 11px;
+      letter-spacing: 1px;
+    }
+
+    /* Стрелочка ввода перед инпутом как в консоли */
+    .field::before {
+      content: ">";
+      position: absolute;
+      left: -15px;
+      top: 27px;
+      color: var(--green);
+      font-size: 14px;
+      font-weight: bold;
+    }
+
+    input {
+      width: 100%;
+      height: 38px;
+      padding: 0 10px;
+      border: 1px solid var(--line);
+      outline: none;
+      color: var(--green-soft);
+      background: rgba(0, 8, 3, 0.9);
+      font: inherit;
+      transition: background 0.2s;
+    }
+
+    input:focus {
+      border-color: var(--green);
+      background: rgba(0, 16, 6, 0.95);
+      box-shadow: 0 0 8px rgba(57,255,106,.15);
+    }
+
+    input::placeholder {
+      color: rgba(73, 105, 81, 0.5);
+    }
+
+    .error {
+      height: 30px; 
+      margin: 2px 0;
+      color: var(--red);
+      font-size: 11px;
+      text-align: left;
+      word-break: break-word;
+      font-weight: bold;
+    }
+
+    button {
+      width: 100%;
+      height: 44px;
+      border: 1px solid var(--green);
+      color: #000;
+      background: var(--green); /* Инвертированная кнопка — яркая, как в Fallout */
+      font: bold 14px "Courier New", monospace;
+      text-transform: uppercase;
+      cursor: pointer;
+      letter-spacing: 1px;
+      transition: all 0.2s;
+    }
+
+    button:hover {
+      background: transparent;
+      color: var(--green);
+      box-shadow: 0 0 15px rgba(57,255,106,.3);
+    }
+
+    button:disabled {
+      opacity: .4;
+      cursor: wait;
+      background: transparent;
+      color: var(--green);
+    }
+
+    .status {
+      margin-top: 25px;
+      color: var(--muted);
+      font-size: 10px;
+      letter-spacing: 1px;
+    }
+
+    .status.ok { color: var(--green); text-shadow: 0 0 5px var(--green); }
+
+    @media (max-width: 480px) {
+      .access-card {
+        padding: 25px 25px;
+      }
+      .field::before { display: none; }
+    }
+        /* ========================================================
+       ПРИНУДИТЕЛЬНЫЙ ИМПОРТ И СБРОС ШРИФТА НА PRESS START 2P
+       ======================================================== */
+    @import url('https://googleapis.com');
+
+    html, body, main, form, input, button, div, span, h1, label {
+      font-family: "Press Start 2P", system-ui !important;
+      font-weight: 400 !important;
+      font-style: normal !important;
+    }
+
+  </style>
+  <link rel="stylesheet" href="./font-override.css">
+</head>
+
+<body>
+
+  <div class="screen-container">
+    <div class="crt-glass"></div>
+    <div class="crt-laser-line"></div>
+    <div class="crt-flicker"></div>
+
+    <div class="corner">◉ ТЕМА: СЕКРЕТНО</div>
+
+    <main class="access-card">
+      <!-- Декоративный системный заголовок -->
+      <div class="terminal-header">
+        <span>.................</span>
+        <span>.................</span>
+      </div>
+
+      <div class="logo">◎</div>
+
+      <div class="classification">&#160; &#160;ТРЕБУЕТСЯ АВТОРИЗАЦИЯ </div>
+
+      <h1>&#160; &#160;[МОРБ]</h1>
+
+      <div class="subtitle">
+       
+      </div>
+
+      <form id="protectedLoginForm" autocomplete="on">
+        <div class="field">
+          <label for="username">ВВЕДИТЕ ЛОГИН</label>
+          <input
+            id="username"
+            name="username"
+            type="text"
+            placeholder="USER_NAME"
+            autocomplete="username"
+            required
+          >
+        </div>
+
+        <div class="field">
+          <label for="password">ВВЕДИТЕ ПАРОЛЬ</label>
+          <input
+            id="password"
+            name="password"
+            type="password"
+            placeholder="PASSWORD"
+            autocomplete="current-password"
+            required
+          >
+        </div>
+
+        <div id="error" class="error"></div>
+
+        <button id="loginBtn" type="submit">Инициализировать</button>
+      </form>
+
+      <div id="status" class="status">ВНИМАНИЕ: ТОЛЬКО ДЛЯ АВТОРИЗОВАННОГО ПЕРСОНАЛА [МОРБ]</div>
+    </main>
+  </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+  <script>
+    const SUPABASE_URL = "https://nizchphlxxhvlpzlfqjc.supabase.co";
+    const SUPABASE_KEY = "sb_publishable_ro2cNY3wuyas9GlfJIZ3MA_W3OTmBst";
+    const supabaseClient = window.supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
+
+    const form = document.getElementById("protectedLoginForm");
+    const loginBtn = document.getElementById("loginBtn");
+    const errorBox = document.getElementById("error");
+    const statusBox = document.getElementById("status");
+
+    function getNextPage() {
+      const params = new URLSearchParams(location.search);
+      const next = params.get("next");
+      if (!next || !next.startsWith("/") || next.startsWith("//")) {
+        return "./index.html";
+      }
+      return next;
+    }
+
+    async function checkExistingSession() {
+      const { data } = await supabaseClient.auth.getSession();
+      if (data?.session?.user) {
+        location.replace(getNextPage());
+      }
+    }
+
+    form.addEventListener("submit", async (event) => {
+      event.preventDefault(); // Запрещаем перезагрузку страницы
+      // ========================================================
+      // ИСПРАВЛЕНО: ЗАПУСК ЗВУКА ПРИ НАЖАТИИ КНОПКИ
+      // ========================================================
+      const loginSound = document.getElementById("login-sound");
+      if (loginSound) {
+        loginSound.volume = 0.25; // Громкость 25%
+        loginSound.currentTime = 0; // Сбрасываем в начало на случай повторного клика
+        loginSound.play().catch(err => console.warn("Ошибка воспроизведения звука:", err));
+      }
+
+      errorBox.textContent = "";
+      loginBtn.disabled = true;
+      loginBtn.textContent = "[ СИНХРОНИЗАЦИЯ... ]";
+
+      const username = document.getElementById("username").value.trim();
+      const password = document.getElementById("password").value;
+      
+      const email = `${username}@m.ru`;
+
+      try {
+        const { data, error } = await supabaseClient.auth.signInWithPassword({ email, password });
+
+        if (error || !data?.user) {
+          console.error("Ошибка входа:", error);
+          errorBox.textContent = "INVALID CREDENTIALS // ДОСТУП ОТКЛОНЁН";
+          statusBox.classList.remove("ok");
+          loginBtn.disabled = false;
+          loginBtn.textContent = "Инициализировать";
+          return;
+        }
+
+        statusBox.textContent = "СОЕДИНЕНИЕ УСТАНОВЛЕНО // СКАЧИВАНИЕ ДАННЫХ...";
+        statusBox.classList.add("ok");
+        loginBtn.textContent = "[ ДОСТУП РАЗРЕШЁН ]";
+
+        setTimeout(() => {
+          location.replace(getNextPage());
+        }, 1000);
+
+      } catch (err) {
+        console.error("Критическая ошибка:", err);
+        errorBox.textContent = "SYSTEM ERROR // ОШИБКА ПОДКЛЮЧЕНИЯ";
+        loginBtn.disabled = false;
+        loginBtn.textContent = "Инициализировать";
+      }
+    });
+
+    checkExistingSession();
+  </script>
+      <!-- Аудио-элемент. Если login.wav лежит в папке sounds рядом с html -->
+  <audio id="login-sound" src="./sounds/login.wav" preload="auto"></audio>
+
+  <script>
+    (function() {
+      const sound = document.getElementById("login-sound");
+      if (!sound) return;
+
+      // Настройка громкости (25%)
+      sound.volume = 0.25;
+
+      // Функция запуска звука
+      function triggerSound() {
+        sound.play()
+          .then(() => {
+            console.log("► Звук терминала успешно воспроизведен!");
+            // Убираем слушатели, чтобы звук не играл повторно при каждом клике
+            removeListeners();
+          })
+          .catch((err) => {
+            console.error("Ошибка воспроизведения аудио:", err);
+          });
+      }
+
+      // Слушатели на любые действия пользователя
+      function removeListeners() {
+        document.removeEventListener("click", triggerSound);
+        document.removeEventListener("keydown", triggerSound);
+        document.removeEventListener("touchstart", triggerSound);
+      }
+
+      document.addEventListener("click", triggerSound);
+      document.addEventListener("keydown", triggerSound);
+      document.addEventListener("touchstart", triggerSound);
+
+      // Проверка на ошибку загрузки файла (Неверный путь или формат)
+      sound.addEventListener("error", function() {
+        const errCode = sound.error ? sound.error.code : "Неизвестно";
+        console.error("КРИТИЧЕСКАЯ ОШИБКА АУДИО: Файл не найден или поврежден. Код ошибки:", errCode);
+        
+        // Выводим ошибку прямо в окно статуса терминала, чтобы вы её увидели
+        const statusBox = document.getElementById("status");
+        if (statusBox) {
+          statusBox.innerHTML = "<span style='color:#ff3939;'>[ОШИБКА АУДИО] Сбой загрузки ./sounds/login.wav (Проверьте путь к файлу!)</span>";
+        }
+      });
+
+      // Первая слепая попытка включить звук сразу (на случай, если кеш браузера разрешит)
+      triggerSound();
+    })();
+  </script>
+</body>
+</html>
+

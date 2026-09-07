@@ -299,6 +299,7 @@ if (errorModal) {
 // 5. Функция выхода из системы
 async function handleLogout() {
   await supabaseClient.auth.signOut();
+  window.isAdminActive = false;
   clearCabinet();
 }
 

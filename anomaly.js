@@ -9,7 +9,6 @@ const adminUnlockBtn = document.getElementById('adminUnlockBtn');
 const pAuthZone = document.getElementById('p-auth-zone');
 const addAnomalyBtn = document.getElementById('addAnomalyBtn');
 
-let isAdminActive = false;
 window.isAdminActive = false;
 let activeDeleteAnomalyId = null; // Глобальное объявление переменной удаления
 
@@ -74,7 +73,7 @@ function renderAnomalyList(anomalyList = []) {
             : `<div class="staff-avatar" style="display:flex; align-items:center; justify-content:center; font-size:45px; color:var(--green);">?</div>`;
 
         card.innerHTML = `
-            <button class="delete-staff-btn" data-id="${safe(item.id)}" style="display:${isAdminActive ? 'block' : 'none'};">[×]</button>
+            <button class="delete-staff-btn" data-id="${safe(item.id)}" style="display:${window.isAdminActive ? 'block' : 'none'};">[×]</button>
             ${avatar}
             <span style="font-size:11px; color:var(--muted);">ID: #V07-A${safe(item.id)}</span>
             <strong style="display:block; color:var(--green-bright); margin-top:5px; font-size:16px;">${safe(item.name)}</strong>
@@ -113,7 +112,7 @@ if (adminUnlockBtn) {
 if (addAnomalyBtn) {
     addAnomalyBtn.addEventListener('click', async (event) => {
         event.preventDefault();
-        if (!isAdminActive) { alert("Сначала включите режим редактирования."); return; }
+        if (!window.isAdminActive) { alert("Сначала включите режим редактирования."); return; }
 
         const name = document.getElementById('anomalyName')?.value.trim();
         const role = document.getElementById('anomalyRole')?.value.trim();
@@ -148,7 +147,7 @@ if (addAnomalyBtn) {
 // УДАЛЕНИЕ (КАСТОМНОЕ ОКНО)
 // ========================================================
 function deleteAnomaly(id) {
-    if (!isAdminActive) return;
+    if (!window.isAdminActive) return;
     activeDeleteAnomalyId = id;
     const modal = document.getElementById('confirmDeleteModal');
     if (modal) {
